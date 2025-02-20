@@ -15,6 +15,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   animated_background: any
   glassmorphism_ui: any
+  audioplayers: ^6.2.0
 
 dev_dependencies:
   flutter_test:
@@ -23,7 +24,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
   assets:
+    - assets/affirmations.jpg
+    - assets/meditation.jpg
     - assets/videos/background.mp4
     - assets/videos/background1.mp4
+    - assets/audio/calm_music.mp3
+    

@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Welcome to Calm Attack!",
+                  "Welcome to Haven!",
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,

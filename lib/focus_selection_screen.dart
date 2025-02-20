@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:animated_background/animated_background.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
-import 'dart:math';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:my_first_app/tap_game_screen.dart';
+
 
 class FocusSelectionScreen extends StatefulWidget {
   @override
@@ -32,10 +34,9 @@ class _FocusSelectionScreenState extends State<FocusSelectionScreen> with Ticker
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // Deep black theme
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // Unique Animated Background with Twinkling Effect
           Positioned.fill(
             child: AnimatedBuilder(
               animation: _twinkleAnimation,
@@ -60,7 +61,7 @@ class _FocusSelectionScreenState extends State<FocusSelectionScreen> with Ticker
               },
             ),
           ),
-          
+
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -81,22 +82,51 @@ class _FocusSelectionScreenState extends State<FocusSelectionScreen> with Ticker
                     _buildGlassButton(
                       icon: Icons.music_note,
                       label: "Listen to Music",
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MusicScreen(),
+                          ),
+                        );
+                      },
                     ),
                     _buildGlassButton(
                       icon: Icons.touch_app,
                       label: "Tap to Feel Better",
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TapGameScreen(),
+                          ),
+                        );
+                      },
                     ),
+
                     _buildGlassButton(
                       icon: Icons.bubble_chart,
                       label: "Guided Meditation",
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ImageScreen(imagePath: 'assets/meditation.jpg'),
+                          ),
+                        );
+                      },
                     ),
                     _buildGlassButton(
                       icon: Icons.self_improvement,
                       label: "Affirmations",
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ImageScreen(imagePath: 'assets/affirmations.jpg'),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -138,6 +168,110 @@ class _FocusSelectionScreenState extends State<FocusSelectionScreen> with Ticker
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// New Screen to Play Music
+class MusicScreen extends StatefulWidget {
+  @override
+  _MusicScreenState createState() => _MusicScreenState();
+}
+
+class _MusicScreenState extends State<MusicScreen> {
+  late AudioPlayer _audioPlayer;
+  bool isPlaying = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _audioPlayer = AudioPlayer();
+    _playMusic();
+  }
+
+  void _playMusic() async {
+    await _audioPlayer.play(AssetSource('audio/calm_music.mp3'));
+    setState(() {
+      isPlaying = true;
+    });
+  }
+
+  void _toggleMusic() async {
+    if (isPlaying) {
+      await _audioPlayer.pause();
+    } else {
+      await _audioPlayer.resume();
+    }
+    setState(() {
+      isPlaying = !isPlaying;
+    });
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.stop();
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: Text("Calm Music"),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.music_note,
+              size: 100,
+              color: Colors.white,
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Playing: Calm Music",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: _toggleMusic,
+              icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+              label: Text(isPlaying ? "Pause Music" : "Play Music"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white.withOpacity(0.2),
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Screen to Display Images
+class ImageScreen extends StatelessWidget {
+  final String imagePath;
+
+  ImageScreen({required this.imagePath});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: Text("Focus Image"),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: Center(
+        child: Image.asset(imagePath),
       ),
     );
   }
